@@ -58,5 +58,15 @@ class KeyboardViewController: UIInputViewController {
         }
         self.nextKeyboardButton.setTitleColor(textColor, for: [])
     }
-
+    
+    @IBAction func alphabetClick(_ sender: UIButton) {
+        if let title = sender.currentTitle {
+                print("Letter clicked: \(title)")
+                
+                // Insert the clicked letter into the text input
+                (textDocumentProxy as UIKeyInput).insertText(title)
+            } else {
+                print("Button title is nil")
+            }    }
+    
 }
