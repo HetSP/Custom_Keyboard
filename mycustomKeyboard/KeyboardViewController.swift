@@ -11,7 +11,18 @@ class KeyboardViewController: UIInputViewController {
 
     @IBOutlet var nextKeyboardButton: UIButton!
     
+    @IBOutlet var alphabets: [UIButton]!
     
+    @IBOutlet weak var backspace: UIButton!
+    
+    @IBOutlet weak var newline: UIButton!
+    
+    @IBOutlet weak var spacebar: UIButton!
+    
+    @IBOutlet weak var capsLock: UIButton!
+    
+    // Define a boolean variable to track the state of caps lock
+    var capsLockEnabled = false
     
     override func updateViewConstraints() {
         super.updateViewConstraints()
@@ -25,7 +36,7 @@ class KeyboardViewController: UIInputViewController {
         // Perform custom UI setup here
         self.nextKeyboardButton = UIButton(type: .system)
         
-        self.nextKeyboardButton.setTitle(NSLocalizedString("Next Keyboard", comment: "Title for 'Next Keyboard' button"), for: [])
+        self.nextKeyboardButton.setTitle(NSLocalizedString("", comment: "Title for 'Next Keyboard' button"), for: [])
         self.nextKeyboardButton.sizeToFit()
         self.nextKeyboardButton.translatesAutoresizingMaskIntoConstraints = false
         
@@ -59,14 +70,65 @@ class KeyboardViewController: UIInputViewController {
         self.nextKeyboardButton.setTitleColor(textColor, for: [])
     }
     
-    @IBAction func alphabetClick(_ sender: UIButton) {
-        if let title = sender.currentTitle {
-                print("Letter clicked: \(title)")
-                
-                // Insert the clicked letter into the text input
-                (textDocumentProxy as UIKeyInput).insertText(title)
-            } else {
-                print("Button title is nil")
-            }    }
+}
+
+extension KeyboardViewController{
+    //for any alphabet clicked the below function is executed
+    @IBAction func buttonTapped(_ sender: UIButton) {
+        guard let key = sender.titleLabel?.text else {return}
+        (textDocumentProxy as UIKeyInput).insertText(key)
+    }
     
+    //for backspace click below function is executed
+    @IBAction func backspaceTapped(){
+        (textDocumentProxy as UIKeyInput).deleteBackward()
+    }
+    
+    //for newlinw button click below function is executed
+    @IBAction func newlineTapped(){
+        (textDocumentProxy as UIKeyInput).insertText("\n")
+    }
+    
+    //for spacebar click below function is executed
+    @IBAction func spacebarTapped(){
+        (textDocumentProxy as UIKeyInput).insertText(" ")
+    }
+    
+    //for @ click below function is executed
+    @IBAction func attherateTapped(_ sender: UIButton) {
+        (textDocumentProxy as UIKeyInput).insertText("@")
+    }
+
+    // Function to toggle caps lock state and update buttons accordingly
+    func toggleCapsLockState(for buttons: [UIButton]) {
+        capsLockEnabled.toggle()
+        
+        for button in buttons {
+            let currentTitle = button.titleLabel?.text ?? ""
+            let updatedTitle = capsLockEnabled ? currentTitle.uppercased() : currentTitle.lowercased()
+            button.setTitle(updatedTitle, for: .normal)
+        }
+    }
+    
+    //for capslock click this function will be called
+    @IBAction func capsLockTapped(){
+        toggleCapsLockState(for: alphabets)
+    }
+    
+    //for close keyboard button click this function will be executed
+    @IBAction func closeKeyboardTapped(_ sender: UIButton) {
+        dismissKeyboard()
+    }
+    
+    //for buttons having two symbols this function will be executed
+    @IBAction func twoItemButtonsTapped(_ sender: UIButton){
+        if(capsLockEnabled){
+            guard let key = sender.titleLabel?.text else {return}
+            (textDocumentProxy as UIKeyInput).insertText(key)
+        }else{
+            guard let key = sender.subtitleLabel?.text else {return}
+            (textDocumentProxy as UIKeyInput).insertText(key)
+        }
+    }
+
 }
