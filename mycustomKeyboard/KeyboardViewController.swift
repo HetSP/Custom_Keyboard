@@ -9,6 +9,10 @@ import UIKit
 
 class KeyboardViewController: UIInputViewController {
 
+    @IBOutlet weak var firstScreen: UIStackView!
+    @IBOutlet weak var secondScreen: UIStackView!
+    @IBOutlet weak var thirdScreen: UIStackView!
+    
     @IBOutlet var nextKeyboardButton: UIButton!
     
     @IBOutlet var alphabets: [UIButton]!
@@ -23,6 +27,7 @@ class KeyboardViewController: UIInputViewController {
     
     // Define a boolean variable to track the state of caps lock
     var capsLockEnabled = false
+    @IBOutlet var numericandsymbols: [UIButton]!
     
     override func updateViewConstraints() {
         super.updateViewConstraints()
@@ -69,6 +74,9 @@ class KeyboardViewController: UIInputViewController {
         }
         self.nextKeyboardButton.setTitleColor(textColor, for: [])
     }
+    
+    
+    
     
 }
 
@@ -130,5 +138,26 @@ extension KeyboardViewController{
             (textDocumentProxy as UIKeyInput).insertText(key)
         }
     }
-
+    
+    @IBAction func showNumericKeyboardTapped(_ sender: UIButton) {
+        self.firstScreen.alpha = 0
+        self.secondScreen.alpha = 1
+        self.thirdScreen.alpha = 0
+    }
+    
+    @IBAction func showAlphabeticKeyboardTapped(_ sender: UIButton) {
+        self.secondScreen.alpha = 0
+        self.firstScreen.alpha = 1
+        self.thirdScreen.alpha = 0
+    }
+    
+    @IBAction func showThirdscreen(_ sender: UIButton) {
+        self.secondScreen.alpha = 0
+        self.firstScreen.alpha = 0
+        self.thirdScreen.alpha = 1
+    }
+    
+    @IBAction func shiftLeft(){
+        (textDocumentProxy as UITextDocumentProxy).adjustTextPosition(byCharacterOffset: -1)
+    }
 }
